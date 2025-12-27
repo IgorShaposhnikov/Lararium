@@ -362,15 +362,15 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-node_modules
+node_modules/
 
 # Output
-.output
+output/
 .vercel
 .netlify
 .wrangler
-/.svelte-kit
-/build
+.svelte-kit
+build/
 
 # OS
 .DS_Store
