@@ -4,16 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 namespace Lararium.API.Controllers
 {
     [ApiController]
-    [ApiVersion(1.0)]
+    [ApiVersion(2.0)]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class WeatherController : ControllerBase
     {
         private static readonly string[] Summaries =
         [
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         ];
 
-        [HttpGet(Name = "GetWeatherForecast")]
+        [HttpGet(Name = "GetWeather")]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast

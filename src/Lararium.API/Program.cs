@@ -8,6 +8,9 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+// Api versioning
+builder.Services.EnableApiVersioning();
+
 // Register all app options.
 builder.Services.RegisterOptions(builder.Configuration);
 // Jwt Authorization
@@ -21,7 +24,11 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        foreach (var description in app.DescribeApiVersions())
+            options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName);
+    });
 }
 
 app.UseHttpsRedirection();
