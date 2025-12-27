@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Lararium.API/Lararium.API.csproj" />
+  <Project Path="Lararium.UI.Swelte/Lararium.UI.Swelte.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+</Solution>
