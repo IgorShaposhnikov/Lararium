@@ -1,8 +1,10 @@
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lararium.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [ApiVersion(2.0)]
     [Route("api/v{version:apiVersion}/[controller]")]

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Lararium.Authorization.Jwt.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -6,20 +8,20 @@ using System.Text;
 
 namespace Lararium.API.Extensions
 {
-    public static class JwtAuthenticationServicesCollectionExtensions
+    internal static class JwtAuthenticationServicesCollectionExtensions
     {
         extension(IServiceCollection services)
         {
-            public IServiceCollection AddJwtAuthorization()
+            internal IServiceCollection AddJwtAuthorization(IConfiguration configuration)
             {
-                var serviceProvider = services.BuildServiceProvider();
-                var jwtOptions = serviceProvider.GetRequiredService<IOptions<AuthorizationOptions>>();
-                var jwtKey = jwtOptions.Value.Key;
+                var jwtKey = configuration.GetSection("Jwt")["Key"];
+
+                ArgumentException.ThrowIfNullOrEmpty(jwtKey);
 
                 var tokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!)),
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     RequireExpirationTime = true,

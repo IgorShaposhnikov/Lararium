@@ -1,14 +1,15 @@
-﻿namespace Lararium.API.Extensions
+﻿using Lararium.API.Options;
+
+namespace Lararium.API.Extensions
 {
-    public static class OptionsServicesCollectionExtensions
+    internal static class OptionsServicesCollectionExtensions
     {
         extension(IServiceCollection services)
         {
-            public void RegisterOptions(ConfigurationManager configuration)
+            internal void RegisterOptions(ConfigurationManager configuration)
             {
-                services.AddOptions<AuthorizationOptions>()
-                    .Bind(configuration.GetSection("Jwt"))
-                    .ValidateOnStart();
+                services.AddOptions<RedisOptions>()
+                    .Bind(configuration.GetSection("Redis"));
             }
         }
     }
