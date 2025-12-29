@@ -1,5 +1,32 @@
 ﻿<script>
     import "./page.css";
+    import { page } from "$app/state";
+    // import { goto } from "$app/navigation";
+    import { auth } from "$lib/lararium/auth.svelte.js";
+    import { onMount } from "svelte";
+    import { enhance } from "$app/forms";
+
+    let login = $state("string");
+    let password = $state("string");
+
+    onMount(() => {
+        console.log(page.url.searchParams.get("returnUrl"));
+    });
+
+    async function loginClicked(e) {
+        e.preventDefault();
+        const returnUrl = page.url.searchParams.get('returnUrl') || "/dashboard";
+        console.log(returnUrl);
+        await auth.login({ login: "string", password: "string" });
+
+        if (returnUrl.startsWith('http')) {
+            window.location.href = returnUrl;
+        } else {
+            goto(returnUrl);
+        }
+    }
+
+    export const ssr = false;
 </script>
 
 <div class="login-container">
@@ -17,12 +44,16 @@
             <p>Только для авторизованных пользователей домашней сети</p>
         </div>
 
-        <form class="login-form" id="loginForm">
+        <form
+            class="login-form"
+            id="loginForm" onsubmit={loginClicked}
+        >
             <div class="form-group">
                 <label class="form-label" for="email">Имя пользователя</label>
                 <div class="input-with-icon">
                     <i class="fas fa-user input-icon"></i>
                     <input
+                        bind:value={login}
                         class="form-input"
                         type="text"
                         id="username"
@@ -37,6 +68,7 @@
                 <div class="input-with-icon">
                     <i class="fas fa-lock input-icon"></i>
                     <input
+                        bind:value={password}
                         class="form-input"
                         type="password"
                         id="password"
@@ -59,16 +91,14 @@
                         <input type="checkbox" id="remember" />
                         <span class="checkmark"></span>
                     </label>
-                    <span class="remember-text"
-                        >Запомнить на этом устройстве</span
-                    >
+                    <span class="remember-text">Запомнить на этом устройстве</span>
                 </div>
-                <a href="#" class="forgot-password" id="forgotPassword"
-                    >Забыли пароль?</a
-                >
+                <a href="#" class="forgot-password" id="forgotPassword">
+                    Забыли пароль?
+                </a>
             </div>
 
-            <button class="submit-button" type="submit">
+            <button class="submit-button">
                 <i class="fas fa-sign-in-alt"></i>
                 Войти в домашнюю сеть
             </button>

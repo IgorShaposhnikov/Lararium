@@ -3,6 +3,7 @@
 	// import font_awesome from '$lib/assets/css/font-awesome/6.4.0/all.min.css'
 
 	let { children } = $props();
+	export const ssr = false;
 </script>
 
 <svelte:head>
