@@ -3,13 +3,12 @@ using Lararium.Authorization.Jwt.Models.Requests;
 using Lararium.Authorization.Jwt.Models.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Lararium.Authorization.Jwt.Controllers
 {
     [ApiController]
     [ApiVersion(1.0)]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}/auth")]
     public class AuthorizationController : ControllerBase
     {
         private readonly IJwtAuthorizationProvider _serivce;
