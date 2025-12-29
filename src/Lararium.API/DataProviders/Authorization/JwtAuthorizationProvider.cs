@@ -26,16 +26,16 @@ namespace Lararium.API.DataProviders.Authorization
             _tokenService = tokenService;
         }
 
-        public async Task<AuthenticationResponse> LoginUserAsync(string login, string password, CancellationToken cancellationToken = default!)
+        public async Task<AuthenticationResponse> LoginUserAsync(LoginRequest request, CancellationToken cancellationToken = default!)
         {
             var user = await _dbContext.Users
                 .FirstOrDefaultAsync(
-                    u => u.Login == login,
+                    u => u.Login == request.Login,
                     cancellationToken);
 
-            UserNotFoundException.ThrowIfNull(user, login);
+            UserNotFoundException.ThrowIfNull(user, request.Login);
 
-            if (!_tokenService.IsPasswordCorrect(password, user!.PasswordHash!))
+            if (!_tokenService.IsPasswordCorrect(request.Password, user!.PasswordHash!, user))
             {
                 throw new UnauthorizedAccessException("Invalid credentials");
             }
@@ -58,7 +58,7 @@ namespace Lararium.API.DataProviders.Authorization
         {
             var isUserWithLoginExists = await IsUserExistsAsync(data.Login, cancellationToken);
 
-            if (isUserWithLoginExists) 
+            if (isUserWithLoginExists)
             {
                 throw new Exception("User already exists");
             }
@@ -69,13 +69,13 @@ namespace Lararium.API.DataProviders.Authorization
                 MiddleName = data.MiddleName,
                 LastName = data.LastName,
                 Login = data.Login,
-                PasswordHash = Convert.ToHexString(_tokenService.GenerateHashFromString(data.Password))
+                PasswordHash = _tokenService.GenerateHashFromString(data.Password)
             };
 
             await _dbContext.Users.AddAsync(newUser, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return await LoginUserAsync(data.Login, data.Password, cancellationToken);
+            return await LoginUserAsync(new LoginRequest { Login = data.Login, Password = data.Password }, cancellationToken);
         }
 
         public Task<bool> IsUserExistsAsync(string login, CancellationToken cancellationToken = default)

@@ -1,4 +1,6 @@
 ﻿using Lararium.Authorization.Jwt.Models;
+using Lararium.Core;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,10 +14,12 @@ namespace Lararium.Authorization.Jwt
     {
         private readonly JwtOptions _jwtOptions;
         private readonly HashAlgorithmName _hashAlgorithmName = HashAlgorithmName.SHA512;
+        private readonly IPasswordHasher<LarariumUser> _passwordHasher;
 
-        public JwtTokenService(IOptions<JwtOptions> jwtOptions)
+        public JwtTokenService(IPasswordHasher<LarariumUser> passwordHasher,  IOptions<JwtOptions> jwtOptions)
         {
             _jwtOptions = jwtOptions.Value;
+            _passwordHasher = passwordHasher;
         }
 
         public RefreshToken GenerateRefreshToken()
@@ -40,7 +44,7 @@ namespace Lararium.Authorization.Jwt
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(1),
+                expires: DateTime.UtcNow.Add(_jwtOptions.AccessTokenExpiration),
                 signingCredentials: creds
             );
 
@@ -48,26 +52,14 @@ namespace Lararium.Authorization.Jwt
                 WriteToken(token);
         }
 
-        public bool IsPasswordCorrect(string password, string hash)
+        public bool IsPasswordCorrect(string password, string hash, LarariumUser user = null)
         {
-            return CryptographicOperations.FixedTimeEquals(
-                Convert.FromBase64String(Convert.ToHexString(GenerateHashFromString(password))),
-                Convert.FromBase64String(hash)
-            );
+            return _passwordHasher.VerifyHashedPassword(null, hash, password) == PasswordVerificationResult.Success;
         }
 
-        public byte[] GenerateHashFromString(string value)
+        public string GenerateHashFromString(string password, LarariumUser user = null)
         {
-            var salt = _jwtOptions.HashConfig.Salt;
-            var iteration = _jwtOptions.HashConfig.Iteration;
-            var length = _jwtOptions.HashConfig.Length;
-            return Rfc2898DeriveBytes.Pbkdf2(
-                value.AsSpan(),
-                Convert.FromBase64String(salt!),
-                iteration,
-                _hashAlgorithmName,
-                length
-            );
+            return _passwordHasher.HashPassword(user, password);
         }
 
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)

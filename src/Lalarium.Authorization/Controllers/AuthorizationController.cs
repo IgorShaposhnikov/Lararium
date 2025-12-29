@@ -34,11 +34,11 @@ namespace Lararium.Authorization.Jwt.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<AuthenticationResponse>> Login(string login, string password)
+        public async Task<ActionResult<AuthenticationResponse>> Login(LoginRequest request)
         {
             try
             {
-                var response = await _serivce.LoginUserAsync(login, password);
+                var response = await _serivce.LoginUserAsync(request);
                 return response;
             }
             catch (Exception e)

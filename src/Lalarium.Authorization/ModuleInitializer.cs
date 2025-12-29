@@ -17,6 +17,7 @@ namespace Lararium.Authorization.Jwt
             {
                 services.RegisterOptions(_configuration);
 
+                services.AddScoped<IPasswordHasher<LarariumUser>, PasswordHasher<LarariumUser>>();
                 services.AddScoped<JwtTokenService>();
 
                 return services;

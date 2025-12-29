@@ -5,8 +5,8 @@ namespace Lararium.Authorization.Jwt
 {
     public interface IJwtAuthorizationProvider
     {
-        Task<AuthenticationResponse> RegisterUserAsync(RegisterRequest data, CancellationToken cancellationToken = default);
-        Task<AuthenticationResponse> LoginUserAsync(string login, string password, CancellationToken cancellationToken = default);
+        Task<AuthenticationResponse> RegisterUserAsync(RegisterRequest request, CancellationToken cancellationToken = default);
+        Task<AuthenticationResponse> LoginUserAsync(LoginRequest request, CancellationToken cancellationToken = default);
         Task<bool> IsUserExistsAsync(string login,CancellationToken cancellationToken = default);
         Task<RefreshTokenResponse> RefreshTokenAsync(RefreshTokenRequest request, CancellationToken cancellationToken = default);
     }
