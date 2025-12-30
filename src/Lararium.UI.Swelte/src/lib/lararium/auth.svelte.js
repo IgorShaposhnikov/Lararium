@@ -9,7 +9,7 @@ class LarariumAuthManager {
     refreshTokenExpires = $state(null);
 
     isAccessTokenExpired = $derived(isTokenExpired(this.accessToken));
-    isRefreshTokenExpired = $derived(isRefreshTokenExpired(this.refreshToken));
+    isRefreshTokenExpired = $derived(isRefreshTokenExpired(this.refreshTokenCreated, this.refreshTokenExpires));
 
     constructor(baseUrl) {
         this.baseUrl = baseUrl;
@@ -104,10 +104,10 @@ class LarariumAuthManager {
         this.refreshTokenExpires = tokens.refreshToken.expires;
         this.refreshTokenCreated = tokens.refreshToken.created;
 
-        localStorage.setItem('access_token', tokens.accessToken);
-        localStorage.setItem('refresh_token', tokens.refreshToken.token);
-        localStorage.setItem('refresh_token_expires', tokens.refreshToken.created);
-        localStorage.setItem('refresh_token_created', tokens.refreshToken.expires);
+        localStorage.setItem('access_token', this.accessToken);
+        localStorage.setItem('refresh_token', this.refreshToken);
+        localStorage.setItem('refresh_token_created', this.refreshTokenCreated);
+        localStorage.setItem('refresh_token_expires', this.refreshTokenExpires);
     }
 
     async #preprocess_data() {
