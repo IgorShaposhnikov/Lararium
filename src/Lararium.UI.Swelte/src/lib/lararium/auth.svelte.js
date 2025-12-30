@@ -67,7 +67,9 @@ class LarariumAuthManager {
         }
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            this.logout();
+            const errorBody = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}\n - ${errorBody}`);
         }
 
         var tokens = await response.json();
@@ -116,6 +118,7 @@ class LarariumAuthManager {
 
         if (isRefreshTokenExpired(this.refreshTokenCreated, this.refreshTokenExpires)) {
             this.logout("rt401");
+            return;
         }
 
         if (isTokenExpired(this.accessToken)) {

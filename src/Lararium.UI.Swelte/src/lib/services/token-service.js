@@ -24,13 +24,13 @@ export function isRefreshTokenExpired(created, expired) {
     // 1. Проверяем что expired существует и это валидная дата
     if (!expired || isNaN(new Date(expired).getTime())) {
         console.warn('Invalid expiration date');
-        return false;
+        return true;
     }
 
     // 2. Проверяем что created существует и это валидная дата
     if (!created || isNaN(new Date(created).getTime())) {
         console.warn('Invalid creation date');
-        return false;
+        return true;
     }
 
     // 3. Проверяем что expired не в прошлом
@@ -39,7 +39,7 @@ export function isRefreshTokenExpired(created, expired) {
 
     if (now >= expirationTime) {
         console.warn('Refresh token already expired');
-        return false;
+        return true;
     }
 
     // 4. Проверяем что created не в будущем (с запасом 5 минут)
@@ -48,14 +48,14 @@ export function isRefreshTokenExpired(created, expired) {
 
     if (creationTime > (now + fiveMinutes)) {
         console.warn('Refresh token created in future');
-        return false;
+        return true;
     }
 
     // 5. Дополнительно: проверяем что expired позже created
     if (expirationTime <= creationTime) {
         console.warn('Expiration time must be after creation time');
-        return false;
+        return true;
     }
 
-    return true;
+    return false;
 }
