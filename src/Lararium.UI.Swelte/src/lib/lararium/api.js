@@ -1,10 +1,11 @@
-﻿const API_URL = 'https://localhost:7098/api/v2';
+﻿const API_URL = 'https://localhost:7098/api';
 
 import { auth } from '$lib/lararium/auth.svelte.js';
 class LarariumApi {
 
-    constructor(baseUrl, defaultHeaders = {}) {
+    constructor(baseUrl, apiVersion, defaultHeaders = {}) {
         this.baseUrl = baseUrl;
+        this.apiVersion = apiVersion;
         this.defaultHeaders = {
             'Content-Type': 'application/json',
             ...defaultHeaders
@@ -23,7 +24,7 @@ class LarariumApi {
             auth.logout("rt401");
         }
 
-        const url = `${this.baseUrl}${endpoint}`;
+        const url = `${this.baseUrl}/${this.apiVersion}${endpoint}`;
 
         const requestHeaders = {
             ...this.defaultHeaders,
@@ -38,8 +39,15 @@ class LarariumApi {
         };
 
         if (data !== null) {
-            config.body = JSON.stringify(data);
+            if (data instanceof FormData) {
+                delete config.headers['Content-Type'];
+                config.body = data;
+            } else {
+                config.body = JSON.stringify(data);
+            }
         }
+
+        console.info(config);
 
         const response = await fetch(url, config);
 
@@ -62,25 +70,26 @@ class LarariumApi {
     }
 
     async post(endpoint, data = null, headers = {}, options = {}) {
-        return this.request(endpoint, headers, {
+        return this.request(endpoint, data, headers, {
             method: 'POST',
             ...options
         });
     }
 
     async put(endpoint, data = null, headers = {}, options = {}) {
-        return this.request(endpoint, {
+        return this.request(endpoint, data, {
             method: 'PUT',
             ...options
         });
     }
 
     async delete(endpoint, headers = {}, options = {}) {
-        return this.request(endpoint, {
+        return this.request(endpoint, data, {
             method: 'DELETE',
             ...options
         });
     }
 }
 
-export const api = new LarariumApi(API_URL);
+export const api = new LarariumApi(API_URL, 'v1');
+export const apiV2 = new LarariumApi(API_URL, 'v2');

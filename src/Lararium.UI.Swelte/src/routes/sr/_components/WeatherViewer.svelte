@@ -1,12 +1,12 @@
 <script>
     import { onMount } from "svelte";
     import { browser } from "$app/environment";
-    import { api } from "$lib/lararium/api";
+    import { apiV2 } from "$lib/lararium/api";
 
     let weathers = $state([]);
 
     onMount(async () => {
-        const res = await api.get("/Weather");
+        const res = await apiV2.get("/Weather");
         const resJson = await res.json();
         weathers = resJson.map((x) => new Weather(x));
     });
