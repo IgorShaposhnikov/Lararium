@@ -7,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 // Add services to the container.
-builder.Services.AddControllers().AddApplicationPart(typeof(ModuleInitializer).Assembly);
+builder.Services.AddControllers()
+    .AddModuleControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -31,8 +32,10 @@ builder.Services.AddJwtAuthorization(builder.Configuration);
 builder.Services.AddDbContext(builder.Configuration.GetConnectionString("DefaultConnection")!);
 
 builder.Services.AddScoped<IJwtAuthorizationProvider, JwtAuthorizationProvider>();
+
 // Add JwtAuthorization with endpoint and another logic
-builder.Services.AddJwtAuthModule(builder.Configuration);
+// and etc
+builder.Services.AddModuleServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -47,6 +50,8 @@ if (app.Environment.IsDevelopment())
         foreach (var description in app.DescribeApiVersions())
             options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName);
     });
+
+    app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 }
 
 app.UseHttpsRedirection();

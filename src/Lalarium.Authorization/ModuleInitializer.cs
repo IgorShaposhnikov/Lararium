@@ -9,41 +9,37 @@ namespace Lararium.Authorization.Jwt
 {
     public class ModuleInitializer : IModuleInitializer
     {
+        private readonly ModuleMetadata _metadata = new()
+        {
+            Id = Guid.Parse("6c16fe2c-3010-49a9-b89c-0248b171455d"),
+            Name = "Lararium Jwt Authorization",
+            Assembly = typeof(ModuleInitializer).Assembly,
+            HasApiControllers = true,
+            Version = "1.0.0"
+        };
+
         public ModuleMetadata GetMetadata()
         {
-            return new()
-            {
-                Id = Guid.Parse("6c16fe2c-3010-49a9-b89c-0248b171455d"),
-                Name = "Lararium Jwt Authorization",
-                Assembly = typeof(ModuleInitializer).Assembly,
-                HasApiControllers = true,
-                Version = "1.0.0"
-            };
+            return _metadata;
         }
-    }
 
-    public static class JwtAuthExtensions
-    {
-        extension(IServiceCollection services)
+        public IServiceCollection AddServices(IServiceCollection services, IConfiguration configuration)
         {
-            public IServiceCollection AddJwtAuthModule(IConfiguration _configuration)
-            {
-                services.RegisterOptions(_configuration);
+            RegisterOptions(services, configuration);
 
-                services.AddScoped<IPasswordHasher<LarariumUser>, PasswordHasher<LarariumUser>>();
-                services.AddScoped<JwtTokenService>();
+            services.AddScoped<IPasswordHasher<LarariumUser>, PasswordHasher<LarariumUser>>();
+            services.AddScoped<JwtTokenService>();
 
-                return services;
-            }
+            return services;
+        }
 
-            internal IServiceCollection RegisterOptions(IConfiguration _configuration)
-            {
-                services.AddOptions<JwtOptions>()
-                    .Bind(_configuration.GetSection("Jwt"))
-                    .ValidateOnStart();
+        private IServiceCollection RegisterOptions(IServiceCollection services, IConfiguration _configuration)
+        {
+            services.AddOptions<JwtOptions>()
+                .Bind(_configuration.GetSection("Jwt"))
+                .ValidateOnStart();
 
-                return services;
-            }
+            return services;
         }
     }
 }
