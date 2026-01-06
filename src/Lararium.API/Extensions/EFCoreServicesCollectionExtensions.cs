@@ -1,4 +1,5 @@
 ﻿using Lararium.Persistence;
+using Lararium.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lararium.API.Extensions
@@ -12,6 +13,8 @@ namespace Lararium.API.Extensions
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseNpgsql(connectionString)
                     );
+
+                services.AddDataStores();
 
                 return services;
             }

@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lalarium.Core\Lararium.Core.csproj" />
+    <ProjectReference Include="..\Lararium.Persistence.Core\Lararium.Persistence.Core.csproj" />
   </ItemGroup>
 
 </Project>

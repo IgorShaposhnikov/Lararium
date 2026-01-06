@@ -1,6 +1,7 @@
 services:
   garnet:
     image: 'ghcr.io/microsoft/garnet'
+    restart: unless-stopped
     ulimits:
       memlock: -1
     ports:
@@ -10,5 +11,25 @@ services:
     # network_mode: "host"
     volumes:
       - garnetdata:/data
+
+  db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - lararium-network
+
 volumes:
   garnetdata:
+
+networks:
+  lararium-network:
+    driver: bridge
+    
