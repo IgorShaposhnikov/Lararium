@@ -1,4 +1,4 @@
-﻿const API_URL = 'https://localhost:7098/api';
+﻿const API_URL = import.meta.env.DEV ? '/api' : import.meta.env.VITE_API_URL;
 
 import { auth } from '$lib/lararium/auth.svelte.js';
 class LarariumApi {
@@ -10,6 +10,8 @@ class LarariumApi {
             'Content-Type': 'application/json',
             ...defaultHeaders
         };
+
+        console.log(baseUrl);
     }
 
     async request(endpoint, data = null, headers = {}, options = {}) {

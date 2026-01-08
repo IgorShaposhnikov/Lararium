@@ -34,6 +34,7 @@
     <ProjectReference Include="..\Lalarium.Authorization\Lararium.Authorization.Jwt.csproj" />
     <ProjectReference Include="..\Lalarium.Core\Lararium.Core.csproj" />
     <ProjectReference Include="..\Lararium.Persistence\Lararium.Persistence.csproj" />
+    <ProjectReference Include="..\Lararium.Video\Lararium.Video.csproj" />
   </ItemGroup>
 
   <ItemGroup>

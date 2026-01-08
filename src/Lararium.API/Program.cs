@@ -1,7 +1,10 @@
 using Lararium.API.DataProviders.Authorization;
 using Lararium.API.Extensions;
 using Lararium.Authorization.Jwt;
+using Lararium.Persistence.Extensions;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +56,14 @@ if (app.Environment.IsDevelopment())
 
     app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 }
+
+app.UseExceptionHandler(a => a.Run(async context =>
+{
+    var exception = context.Features.Get<IExceptionHandlerPathFeature>()?.Error;
+    var result = JsonSerializer.Serialize(new { error = exception?.Message });
+    context.Response.ContentType = "application/json";
+    await context.Response.WriteAsync(result);
+}));
 
 app.UseHttpsRedirection();
 

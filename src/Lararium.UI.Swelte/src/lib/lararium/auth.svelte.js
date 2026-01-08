@@ -2,6 +2,8 @@
 import { browser } from '$app/environment';
 import { isTokenExpired, isRefreshTokenExpired } from '$lib/services/token-service';
 
+const API_URL = import.meta.env.DEV ? '/api' : 'https://192.168.0.107:7098/api';
+
 class LarariumAuthManager {
     accessToken = $state(null);
     refreshToken = $state(null);
@@ -11,8 +13,8 @@ class LarariumAuthManager {
     isAccessTokenExpired = $derived(isTokenExpired(this.accessToken));
     isRefreshTokenExpired = $derived(isRefreshTokenExpired(this.refreshTokenCreated, this.refreshTokenExpires));
 
-    constructor(baseUrl) {
-        this.baseUrl = baseUrl;
+    constructor(baseUrl, apiVersion = 'v1') {
+        this.baseUrl = `${baseUrl}/${apiVersion}`;
     }
 
     async init() {
@@ -24,6 +26,7 @@ class LarariumAuthManager {
     async login(credentials) {
 
         let url = `${this.baseUrl}/auth/login`;
+        console.info(url);
 
         const headers = {
             'accept': 'text/plain; x-version=1.0',
@@ -128,5 +131,5 @@ class LarariumAuthManager {
 }
 
 // Export a single instance (Singleton pattern)
-export const auth = new LarariumAuthManager("https://localhost:7098/api/v1");
+export const auth = new LarariumAuthManager('https://localhost:7098/api');
 auth.init();

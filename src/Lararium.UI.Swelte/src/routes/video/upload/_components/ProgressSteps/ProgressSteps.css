@@ -1,0 +1,99 @@
+﻿/* Шаги прогресса */
+.steps-container {
+    margin-bottom: 25px;
+}
+
+.steps-progress {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.progress-bar {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    height: 2px;
+    background: linear-gradient( 90deg, var(--primary) 0%, var(--secondary) 100% );
+    z-index: 2;
+    transition: var(--transition);
+}
+
+.step {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    width: 120px;
+}
+
+.step-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.step.active .step-circle {
+    background: linear-gradient( 135deg, var(--primary) 0%, var(--secondary) 100% );
+    border-color: var(--primary);
+    color: white;
+    box-shadow: 0 3px 8px rgba(59, 130, 246, 0.3);
+    transform: scale(1.05);
+}
+
+.step.completed .step-circle {
+    background: linear-gradient( 135deg, var(--success) 0%, var(--primary) 100% );
+    border-color: var(--success);
+    color: white;
+}
+
+    .step.completed .step-circle i {
+        display: block;
+    }
+
+    .step.completed .step-circle span {
+        display: none;
+    }
+
+.step-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.step.active .step-title {
+    color: var(--text-primary);
+}
+
+.step.completed .step-title {
+    color: var(--success);
+}
+
+@media (max-width: 768px) {
+    .step {
+        width: 80px;
+    }
+
+    .step-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+    }
+
+    .step-title {
+        font-size: 11px;
+    }
+}
