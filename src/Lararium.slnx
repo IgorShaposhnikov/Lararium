@@ -9,6 +9,7 @@
   <Project Path="Lalarium.Authorization/Lararium.Authorization.Jwt.csproj" Id="92bd957c-bebf-4d72-bdbb-4fb5732be2de" />
   <Project Path="Lalarium.Core/Lararium.Core.csproj" Id="ba3a033f-6501-459b-acea-d0db84978688" />
   <Project Path="Lararium.API/Lararium.API.csproj" />
+    <Project Path="Lararium.Media/Lararium.Media.csproj" Id="6c1c428a-dfb0-4689-876c-ea804b633c0e" />
     <Project Path="Lararium.Persistence.Core/Lararium.Persistence.Core.csproj" Id="9d2b4806-3220-47aa-9f5d-e85765e5862b" />
   <Project Path="Lararium.Persistence/Lararium.Persistence.csproj" Id="89e929a5-a3af-49ae-a233-f02cd094e60c" />
   <Project Path="Lararium.UI.Swelte/Lararium.UI.Swelte.esproj">
