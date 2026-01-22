@@ -27,7 +27,7 @@ namespace Lararium.Persistence.DataStores
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "EFCore AddAsync error for video with id: {0}", entity);
+                _logger.LogError(ex, "EFCore AddAsync error for video with id: {}", entity);
                 throw;
             }
         }
@@ -52,9 +52,47 @@ namespace Lararium.Persistence.DataStores
             return await query.FirstOrDefaultAsync(cancellationToken);
         }
 
-        public virtual async Task<IEnumerable<TResult>> GetEntitiesAsync<TResult>(
+        public async Task<IEnumerable<TEntity>> GetEntitiesAsync(Expression<Func<TEntity, bool>>? where = null, List<SortExpression<TEntity>>? orderBy = null, IncludeQuery<TEntity>? includeQuery = null, int? skip = null, int? take = null, bool asNoTracking = true, CancellationToken cancellationToken = default)
+        {
+            return await GetEntitiesInternalAsync(where, orderBy, includeQuery, skip, take, asNoTracking, cancellationToken).ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<TResult>> GetEntitiesAsync<TResult>(Expression<Func<TEntity, TResult>> select, Expression<Func<TEntity, bool>>? where = null, List<SortExpression<TEntity>>? orderBy = null, IncludeQuery<TEntity>? includeQuery = null, int? skip = null, int? take = null, bool asNoTracking = true, CancellationToken cancellationToken = default)
+        {
+            ArgumentNullException.ThrowIfNull(select);
+
+            var query = GetEntitiesInternalAsync(where, orderBy, includeQuery, skip, take, asNoTracking, cancellationToken);
+            return await query.Select(select).ToListAsync(cancellationToken);
+        }
+
+        public abstract Task<bool> IsExists(TId id, CancellationToken cancellationToken = default);
+
+        public Task<bool> IsExists(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            return _dbContext
+                .Set<TEntity>()
+                .AsNoTracking()
+                .AnyAsync(predicate, cancellationToken: cancellationToken);
+        }
+
+        public virtual Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            return _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public virtual void Update(TEntity entity, CancellationToken cancellationToken = default)
+        {
+            ArgumentNullException.ThrowIfNull(entity);
+
+            _dbContext.Set<TEntity>().Update(entity);
+        }
+
+
+        #region Internal Methods
+
+
+        protected virtual IQueryable<TEntity> GetEntitiesInternalAsync(
             Expression<Func<TEntity, bool>>? filter = null,
-            Expression<Func<TEntity, TResult>>? select = null,
             List<SortExpression<TEntity>>? orderBy = null,
             IncludeQuery<TEntity>? include = null,
             int? skip = null,
@@ -98,33 +136,10 @@ namespace Lararium.Persistence.DataStores
             if (take.HasValue)
                 query = query.Take(take.Value);
 
-            ArgumentNullException.ThrowIfNull(select);
-
-            return await query
-                .Select(select)
-                .ToListAsync(cancellationToken);
+            return query;
         }
 
-        public abstract Task<bool> IsExists(TId id, CancellationToken cancellationToken = default);
 
-        public Task<bool> IsExists(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
-        {
-            return _dbContext
-                .Set<TEntity>()
-                .AsNoTracking()
-                .AnyAsync(predicate, cancellationToken: cancellationToken);
-        }
-
-        public virtual Task<int> SaveChangesAsync(CancellationToken cancellationToken)
-        {
-            return _dbContext.SaveChangesAsync(cancellationToken);
-        }
-
-        public virtual void Update(TEntity entity, CancellationToken cancellationToken = default)
-        {
-            ArgumentNullException.ThrowIfNull(entity);
-
-            _dbContext.Set<TEntity>().Update(entity);
-        }
+        #endregion Internal Methods
     }
 }
