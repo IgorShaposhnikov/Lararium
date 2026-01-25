@@ -1,4 +1,5 @@
 ﻿using Lararium.Video.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Lararium.Persistence.DataStores
@@ -12,7 +13,7 @@ namespace Lararium.Persistence.DataStores
 
         public override Task<bool> IsExists(Guid id, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return _dbContext.Videos.AnyAsync(e => e.Id == id, cancellationToken);
         }
     }
 }
