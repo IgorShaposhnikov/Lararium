@@ -83,7 +83,7 @@ namespace Lararium.Persistence.Core
         /// This method sets the entity state to Modified. The changes are not persisted
         /// to the database until <see cref="SaveChangesAsync"/> is called.
         /// </remarks>
-        void Update(TEntity entity, CancellationToken cancellationToken = default);
+        void Update(TEntity entity);
 
         /// <summary>
         /// Checks if an entity with the specified identifier exists in the data store.

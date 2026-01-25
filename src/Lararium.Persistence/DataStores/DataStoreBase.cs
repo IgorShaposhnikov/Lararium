@@ -80,7 +80,7 @@ namespace Lararium.Persistence.DataStores
             return _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public virtual void Update(TEntity entity, CancellationToken cancellationToken = default)
+        public virtual void Update(TEntity entity)
         {
             ArgumentNullException.ThrowIfNull(entity);
 
