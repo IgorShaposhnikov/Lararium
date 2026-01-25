@@ -108,12 +108,28 @@ namespace Lararium.Video.Controllers
             return _options.MaxFileSizeMb;
         }
 
-        [HttpGet("video/{videoId}")]
-        public async Task<IActionResult> GetVideo(string videoId, CancellationToken cancellationToken)
+        [HttpGet("{videoId}")]
+        public async Task<ActionResult<VideoEntity>> GetVideo(string videoId) 
         {
             if (!Guid.TryParse(videoId, out var id))
             {
                 return NotFound();
+            }
+
+            return Ok(await _videoDataStore.GetAsync(id));
+        }
+
+        [HttpGet("{videoId}/stream")]
+        public async Task<IActionResult> GetVideoStreaming(string videoId, CancellationToken cancellationToken)
+        {
+            if (!Guid.TryParse(videoId, out var id))
+            {
+                return NotFound();
+            }
+
+            if (string.IsNullOrWhiteSpace(_options.LocalStorageRoot))
+            {
+                return BadRequest("Video storage is not configured. Contact administrator.");
             }
 
             var entity = await _videoDataStore.GetAsync(id, cancellationToken);
