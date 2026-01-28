@@ -1,4 +1,5 @@
 ﻿using Lararium.Core.Modules;
+using Lararium.Video.Encoders;
 using Lararium.Video.Models.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +21,8 @@ namespace Lararium.Video
         {
             services.AddOptions<VideoServiceOptions>()
                 .Bind(configuration.GetSection("VideoService"));
+
+            services.AddScoped<IVideoEncoder<HlsEncoder>, HlsEncoder>();
 
             return services;
         }
