@@ -1,39 +1,32 @@
 @import "tailwindcss";
 @source ".";
 
-@font-face {
-    font-family: "Arkhip";
-    src: url("/fonts/Arkhip_font.woff2") format("woff2"), url("/fonts/Arkhip_font.ttf") format("truetype");
-    font-display: swap;
-}
-
-:root {
-    --nw-primary-color: #0a0f1b;
-    --nw-secondary-color: #0e1523;
-    --nw-separate-color: #161f34;
-    --nw-layout-width: 1600px;
-    --nw-sidebar-drawer-offset: 100%;
-}
-
 [dir='rtl'] {
     --nw-sidebar-drawer-offset: -100%;
 }
 
 @theme {
-    --animate-nw-fade-in: fd-fade-in 300ms ease;
-    --animate-nw-fade-out: fd-fade-out 300ms ease;
-    --animate-nw-sidebar-in: fd-sidebar-in 250ms ease;
-    --animate-nw-sidebar-out: fd-sidebar-out 250ms ease;
-    --color-nw-background: var(--nw-primary-color);
-    --color-nw-card: var(--nw-secondary-color);
-    --color-nw-border: var(--nw-separate-color);
-    --color-nw-foreground: #ebebeb;
-    --color-nw-muted: hsl(220, 50%, 10%);
-    --color-nw-muted-foreground: hsl(220, 0%, 65%);
-    --color-nw-accent: hsl(220, 40%, 20%);
-    --color-nw-accent-foreground: hsl(220, 80%, 90%);
-    --color-nw-primary: hsl(213 97% 54%);
-    --color-nw-ring: hsl(340, 100%, 90%);
+    --color-l-background: #0f172a;
+    --color-l-card: #1e293b;
+    --color-l-card-light: #334155;
+    --color-l-card-soft: rgba(30, 41, 59, 0.7);
+    --color-l-border: #475569;
+    --color-l-border-light: #64748b;
+    --color-l-foreground: #f1f5f9;
+    --color-l-foreground-secondary: #cbd5e1;
+    --color-l-foreground-muted: #94a3b8;
+    --color-l-primary: #3b82f6;
+    --color-l-primary-dark: #2563eb;
+    --color-l-primary-light: #60a5fa;
+    --color-l-secondary: #8b5cf6;
+    --color-l-accent: #ec4899;
+    --color-l-success: #10b981;
+    --color-l-warning: #f59e0b;
+    --color-l-danger: #ef4444;
+    --color-l-control-bg: rgba(30, 41, 59, 0.7);
+    --color-l-control-hover: rgba(59, 130, 246, 0.1);
+    --shadow-l-default: 0 5px 20px rgba(0, 0, 0, 0.4);
+    --shadow-l-hover: 0 8px 25px rgba(0, 0, 0, 0.5);
 }
 
 @keyframes fd-sidebar-in {
@@ -78,12 +71,12 @@ html {
     ::before,
     ::backdrop,
     ::file-selector-button {
-        /*        border-color: var(--color-nw-border, currentColor);*/
+        /*        border-color: var(--color-l-border, currentColor);*/
     }
 
     body {
-        background-color: var(--color-nw-background);
-        color: var(--color-nw-foreground);
+        background-color: var(--color-l-background);
+        color: var(--color-l-foreground);
     }
 }
 
