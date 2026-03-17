@@ -1,6 +1,6 @@
-﻿const API_URL = '/api';// import.meta.env.VITE_API_URL;
+﻿import { PUBLIC_API_URL } from '$env/static/public';
 
-console.log(API_URL);
+console.log(PUBLIC_API_URL);
 
 import { auth } from '$lib/lararium/auth.svelte.js';
 class LarariumApi {
@@ -95,5 +95,5 @@ class LarariumApi {
     }
 }
 
-export const api = new LarariumApi(API_URL, 'v1');
-export const apiV2 = new LarariumApi(API_URL, 'v2');
+export const api = new LarariumApi(PUBLIC_API_URL, 'v1');
+export const apiV2 = new LarariumApi(PUBLIC_API_URL, 'v2');

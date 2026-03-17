@@ -6,6 +6,7 @@
     import { Video as VideoModel } from "$lib/models/Video";
     import { larariumVideo } from "$lib/lararium/video";
 
+
     let { model: videoData } = $props();
 
     // 1. Инициализируем переменные состояния
@@ -87,5 +88,5 @@
 {/if}
 
 <style>
-    @import "Videoplayer.css";
+    @import "./Videoplayer.css";
 </style>

@@ -1,43 +1,39 @@
 import { api } from "$lib/lararium/api";
-
-const API_URL = '/api';// import.meta.env.VITE_API_URL;
-
+import { PUBLIC_API_URL } from '$env/static/public';
 
 class LarariumVideo {
+    async loadVideoStream(id) {
+        console.log(PUBLIC_API_URL);
+        // так как blob не имеет свой домен, указываем путь до публичного API
+        let serverSegmentUrl = `${PUBLIC_API_URL}/${api.apiVersion}/video/${id}/segment/`;
+        let videoUrlApi = `/video/${id}/stream`;
 
+        const response = await api.get(videoUrlApi);
 
-async loadVideoStream(id) {
-    console.log(API_URL);
-    // так как blob не имеет свой домен, берем домен из window.location.origin, но для разработки нужно будет заменить на путь до сервера
-    let serverSegmentUrl = `${window.location.origin}/api/${api.apiVersion}/video/${id}/segment/`;
-    let videoUrlApi = `/video/${id}/stream`;
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
 
-    const response = await api.get(videoUrlApi);
+        let contentType = response.headers.get("content-type");
+        let contentSize = response.headers.get("content-length");
 
-    if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-    }
+        console.warn(contentType);
 
-    let contentType = response.headers.get("content-type");
-    let contentSize = response.headers.get("content-length");
+        if (contentType === "application/vnd.apple.mpegurl; x-version=1") {
 
-    console.warn(contentType);
+            var m3u8Content = await response.text();
+            m3u8Content = m3u8Content.replaceAll("{baseUrl}", serverSegmentUrl);
+            console.log(serverSegmentUrl);
+            console.log(m3u8Content);
 
-    if (contentType === "application/vnd.apple.mpegurl; x-version=1") {
+            const blob = new Blob([m3u8Content], { type: 'application/x-mpegURL' });
+            const blobUrl = URL.createObjectURL(blob);
+            return blobUrl;
+        }
 
-        var m3u8Content = await response.text();
-        m3u8Content = m3u8Content.replaceAll("{baseUrl}", serverSegmentUrl);
-        console.log(serverSegmentUrl);
-        console.log(m3u8Content);
-
-        const blob = new Blob([m3u8Content], { type: 'application/x-mpegURL' });
-        const blobUrl = URL.createObjectURL(blob);
-        return blobUrl;
-    }
-
-    const blob = await response.blob();
-    return URL.createObjectURL(blob);
-};
+        const blob = await response.blob();
+        return URL.createObjectURL(blob);
+    };
 }
 
-export const larariumVideo = new LarariumVideo(API_URL);
+export const larariumVideo = new LarariumVideo();

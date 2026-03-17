@@ -1,10 +1,7 @@
 ﻿import { writable, derived } from 'svelte/store';
 import { browser } from '$app/environment';
 import { isTokenExpired, isRefreshTokenExpired } from '$lib/services/token-service';
-
-const API_URL = '/api'; //import.meta.env.VITE_API_URL; //'
-
-console.log(API_URL);
+import { PUBLIC_API_URL } from '$env/static/public';
 
 class LarariumAuthManager {
     accessToken = $state(null);
@@ -136,5 +133,5 @@ class LarariumAuthManager {
 }
 
 // Export a single instance (Singleton pattern)
-export const auth = new LarariumAuthManager(API_URL);
+export const auth = new LarariumAuthManager(PUBLIC_API_URL);
 auth.init();
