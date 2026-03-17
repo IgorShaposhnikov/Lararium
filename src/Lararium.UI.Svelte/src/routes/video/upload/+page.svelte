@@ -1,114 +1,57 @@
-﻿<script>
-    import { api } from "$lib/lararium/api";
-    import ProgressSteps from "./_components/ProgressSteps/ProgressSteps.svelte";
-    import BasicInformationStep from "./_components/BasicInformationStep.svelte";
-    import UploadVideoStep from "./_components/UploadVideoStep.svelte";
+﻿<!-- src/lib/components/Step1BasicInfo.svelte -->
+<script>
+    import Steps from "$lib/components/steps/Steps.svelte";
+    import Step from "$lib/components/steps/Step.svelte";
+    import GeneralInformation from "./_components/GeneralInformation.svelte";
+    import VideoUploader from "./_components/VideoUploader.svelte";
 
-    let files = $state(null);
+    let currentStep = $state(0);
+    const totalSteps = 3;
 
-    import step1 from "./_components/step1.svelte";
-    import step2 from "./_components/step2.svelte";
+    function next() {
+        if (currentStep < totalSteps - 1) currentStep++;
+    }
 
-    let defaultSteps = $state([
-        {
-            number: 1,
-            title: "Загрузка видео",
-            completed: false,
-            active: false,
-            stepContent: step1,
-        },
-        {
-            number: 2,
-            title: "Основные данные",
-            completed: false,
-            active: false,
-            stepContent: step2,
-        },
-        {
-            number: 3,
-            title: "Дополнительные данные",
-            completed: false,
-            active: false,
-            stepContent: null,
-        },
-        {
-            number: 4,
-            title: "Завершение",
-            completed: false,
-            active: false,
-            stepContent: null,
-        },
-    ]);
-
-    let videoUploadData = $state({
-        title: "",
-        summary: "",
-        formFile: null,
-        actors: [],
-        mediatags: [],
-    });
-
-    async function uploadVideo() {
-        const formData = new FormData();
-        formData.append("Title", videoUploadData.title);
-        formData.append("Summary", videoUploadData.summary);
-        formData.append("FormFile", videoUploadData.formFile); // Здесь сам файл
-
-        try {
-            let response = await api.post("/Video/upload/hls", formData);
-
-            if (response.ok) {
-                const result = await response.json();
-                alert("Загрузка успешна!");
-            } else {
-                console.error("Ошибка сервера:", response.status);
-            }
-        } catch (error) {
-            console.error("Ошибка сети:", error);
-        }
+    function prev() {
+        if (currentStep > 0) currentStep--;
     }
 </script>
 
-<div>
-    <!-- <ProgressSteps steps={defaultSteps} /> -->
+<div class="flex justify-center h-dvh p-4">
+    <div class="flex flex-col w-5xl">
+        <Steps bind:activeIndex={currentStep} class="flex-1 bg-red-500/0">
+            <Step title="Начало">
+                <GeneralInformation />
+            </Step>
+            <Step title="Процесс">
+                <VideoUploader />
+            </Step>
+            <Step title="Финиш">
+                <h2 class="text-xl font-bold">Завершение</h2>
+                <p>Вы великолепны!</p>
+            </Step>
+        </Steps>
 
-    <BasicInformationStep
-        bind:title={videoUploadData.title}
-        bind:summary={videoUploadData.summary}
-    />
-    <UploadVideoStep bind:file={videoUploadData.formFile} />
+        <div class="mt-6 flex justify-between items-center">
+            <button
+                class="px-6 py-2 border rounded-lg disabled:opacity-30"
+                onclick={prev}
+                disabled={currentStep === 0}
+            >
+                Назад
+            </button>
 
-    <button
-        class="step-button complete"
-        id="completeUpload"
-        onclick={uploadVideo}
-    >
-        <i class="fas fa-upload"></i>
-        Загрузить видео
-    </button>
+            <span class="text-gray-500"
+                >Шаг {currentStep + 1} из {totalSteps}</span
+            >
+
+            <button
+                class="px-6 py-2 bg-black text-white rounded-lg disabled:opacity-30"
+                onclick={next}
+                disabled={currentStep === totalSteps - 1}
+            >
+                Далее
+            </button>
+        </div>
+    </div>
 </div>
-
-<style>
-    :root {
-        --primary: #3b82f6;
-        --primary-dark: #2563eb;
-        --primary-light: #60a5fa;
-        --secondary: #8b5cf6;
-        --accent: #ec4899;
-        --bg-dark: #0f172a;
-        --bg-card: #1e293b;
-        --bg-card-light: #334155;
-        --text-primary: #f1f5f9;
-        --text-secondary: #cbd5e1;
-        --text-muted: #94a3b8;
-        --border-color: #475569;
-        --border-light: #64748b;
-        --success: #10b981;
-        --warning: #f59e0b;
-        --danger: #ef4444;
-        --border-radius: 12px;
-        --shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-        --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.5);
-        --transition: all 0.3s ease;
-    }
-</style>
