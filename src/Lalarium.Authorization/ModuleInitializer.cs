@@ -1,4 +1,5 @@
 ﻿using Lararium.Authorization.Jwt.Models;
+using Lararium.Authorization.Jwt.Services;
 using Lararium.Core;
 using Lararium.Core.Modules;
 using Microsoft.AspNetCore.Identity;
@@ -29,6 +30,7 @@ namespace Lararium.Authorization.Jwt
 
             services.AddScoped<IPasswordHasher<LarariumUser>, PasswordHasher<LarariumUser>>();
             services.AddScoped<JwtTokenService>();
+            services.AddScoped<IJwtIdentityService, JwtIdentityService>();
 
             return services;
         }

@@ -11,9 +11,9 @@ namespace Lararium.Authorization.Jwt.Controllers
     [Route("api/v{version:apiVersion}/auth")]
     public class AuthorizationController : ControllerBase
     {
-        private readonly IJwtAuthorizationProvider _serivce;
+        private readonly IJwtIdentityService _serivce;
 
-        public AuthorizationController(IJwtAuthorizationProvider jwtAuthorizationProvider)
+        public AuthorizationController(IJwtIdentityService jwtAuthorizationProvider)
         {
             _serivce = jwtAuthorizationProvider;
         }

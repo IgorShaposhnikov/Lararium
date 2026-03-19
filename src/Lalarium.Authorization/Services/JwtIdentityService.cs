@@ -1,37 +1,31 @@
-﻿using Lararium.Authorization.Jwt;
-using Lararium.Authorization.Jwt.Exceptions;
+﻿using Lararium.Authorization.Jwt.Exceptions;
 using Lararium.Authorization.Jwt.Models;
 using Lararium.Authorization.Jwt.Models.Requests;
 using Lararium.Authorization.Jwt.Models.Response;
 using Lararium.Core;
-using Lararium.Persistence;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace Lararium.API.DataProviders.Authorization
+namespace Lararium.Authorization.Jwt.Services
 {
-    public class JwtAuthorizationProvider : IJwtAuthorizationProvider
+    public class JwtIdentityService : IJwtIdentityService
     {
-        private readonly AppDbContext _dbContext;
+        private readonly IUserDataStore _userDataStore;
         private readonly IDistributedCache _cache;
         private readonly JwtTokenService _tokenService;
 
-        public JwtAuthorizationProvider(AppDbContext dbContext, IDistributedCache cache, JwtTokenService tokenService)
+        public JwtIdentityService(IUserDataStore userDataStore, IDistributedCache cache, JwtTokenService tokenService)
         {
-            _dbContext = dbContext;
+            _userDataStore = userDataStore;
             _cache = cache;
             _tokenService = tokenService;
         }
 
         public async Task<AuthenticationResponse> LoginUserAsync(LoginRequest request, CancellationToken cancellationToken = default!)
         {
-            var user = await _dbContext.Users
-                .FirstOrDefaultAsync(
-                    u => u.Login == request.Login,
-                    cancellationToken);
+            var user = await _userDataStore.GetAsync(u => u.Login == request.Login, cancellationToken: cancellationToken);
 
             UserNotFoundException.ThrowIfNull(user, request.Login);
 
@@ -72,17 +66,15 @@ namespace Lararium.API.DataProviders.Authorization
                 PasswordHash = _tokenService.GenerateHashFromString(data.Password)
             };
 
-            await _dbContext.Users.AddAsync(newUser, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await _userDataStore.AddAsync(newUser, cancellationToken);
+            await _userDataStore.SaveChangesAsync(cancellationToken);
 
             return await LoginUserAsync(new LoginRequest { Login = data.Login, Password = data.Password }, cancellationToken);
         }
 
         public Task<bool> IsUserExistsAsync(string login, CancellationToken cancellationToken = default)
         {
-            return _dbContext.Users
-                .AsNoTracking()
-                .AnyAsync(x => x.Login == login, cancellationToken);
+            return _userDataStore.IsExists(x => x.Login == login, cancellationToken);
         }
 
 

@@ -6,7 +6,7 @@ namespace Lararium.Persistence.DataStores
 {
     internal class VideoDataStore(AppDbContext dbContext, ILogger<VideoDataStore> logger) : DataStoreBase<VideoEntity, Guid>(dbContext, logger)
     {
-        public override async Task<VideoEntity?> GetAsync(Guid id, CancellationToken cancellationToken = default)
+        public override async Task<VideoEntity?> GetAsync(Guid id, bool asNoTracking = true, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Videos.FindAsync(id, cancellationToken);
         }

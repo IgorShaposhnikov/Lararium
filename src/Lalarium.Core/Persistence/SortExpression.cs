@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Lararium.Video
+namespace Lararium.Core.Persistence
 {
     public class SortExpression<T>
     {

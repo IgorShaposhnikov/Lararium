@@ -19,9 +19,5 @@
         /// Login
         /// </summary>
         public string? Login { get; set; }
-        /// <summary>
-        /// Gets or sets a salted and hashed representation of the password for this user.
-        /// </summary>
-        public string? PasswordHash { get; set; }
     }
 }

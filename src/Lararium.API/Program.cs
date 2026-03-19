@@ -1,6 +1,4 @@
-using Lararium.API.DataProviders.Authorization;
 using Lararium.API.Extensions;
-using Lararium.Authorization.Jwt;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,8 +28,6 @@ builder.Services.EnableApiVersioning();
 builder.Services.AddJwtAuthorization(builder.Configuration);
 // Add EFCore DbContext
 builder.Services.AddDbContext(builder.Configuration.GetConnectionString("DefaultConnection")!);
-
-builder.Services.AddScoped<IJwtAuthorizationProvider, JwtAuthorizationProvider>();
 
 // Add JwtAuthorization with endpoint and another logic
 // and etc

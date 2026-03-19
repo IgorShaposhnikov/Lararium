@@ -52,12 +52,12 @@ namespace Lararium.Authorization.Jwt
                 WriteToken(token);
         }
 
-        public bool IsPasswordCorrect(string password, string hash, LarariumUser user = null)
+        public bool IsPasswordCorrect(string password, string hash, LarariumUser? user = null)
         {
-            return _passwordHasher.VerifyHashedPassword(null, hash, password) == PasswordVerificationResult.Success;
+            return _passwordHasher.VerifyHashedPassword(user, hash, password) == PasswordVerificationResult.Success;
         }
 
-        public string GenerateHashFromString(string password, LarariumUser user = null)
+        public string GenerateHashFromString(string password, LarariumUser? user = null)
         {
             return _passwordHasher.HashPassword(user, password);
         }
@@ -83,7 +83,7 @@ namespace Lararium.Authorization.Jwt
 
                 var jwtToken = tokenHandler.ReadJwtToken(token);
 
-                // Проверяем алгоритм из заголовка
+                // Check algorithm from header
                 var alg = jwtToken.Header.Alg;
 
                 if (!alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase) &&

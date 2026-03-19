@@ -1,6 +1,6 @@
 ﻿using Asp.Versioning;
+using Lararium.Core.Persistence;
 using Lararium.Media.Module;
-using Lararium.Persistence.Core;
 using Lararium.Video.Encoders;
 using Lararium.Video.Models;
 using Lararium.Video.Models.Options;
@@ -195,7 +195,7 @@ namespace Lararium.Video.Controllers
                 return BadRequest("Video storage is not configured. Contact administrator.");
             }
 
-            var entity = await _videoDataStore.GetAsync(id, cancellationToken);
+            var entity = await _videoDataStore.GetAsync(id, cancellationToken: cancellationToken);
 
             var path = Path.GetFullPath(
                 Path.Combine(_options.LocalStorageRoot, _options.VideosSubfolder)

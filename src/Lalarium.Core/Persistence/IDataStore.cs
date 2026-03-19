@@ -1,31 +1,7 @@
-﻿using Lararium.Video;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
-namespace Lararium.Persistence.Core
+namespace Lararium.Core.Persistence
 {
-    /// <summary>
-    /// Represents a delegate for defining entity inclusion (eager loading) strategies in queries.
-    /// </summary>
-    /// <typeparam name="TEntity">The type of the entity being queried.</typeparam>
-    /// <param name="query">The base query to apply inclusion operations to.</param>
-    /// <returns>
-    /// An <see cref="IQueryable{TEntity}"/> with the specified related entities eagerly loaded.
-    /// </returns>
-    /// <remarks>
-    /// This delegate is used to encapsulate Entity Framework Core's Include/ThenInclude patterns
-    /// in a reusable and composable manner. It enables separation of query composition from
-    /// business logic and supports advanced eager loading scenarios.
-    /// 
-    /// Example usage:
-    /// <code>
-    /// IncludeQuery&lt;VideoEntity&gt; include = query => query
-    ///     .Include(v => v.Tags)
-    ///     .ThenInclude(t => t.Category)
-    ///     .Include(v => v.Actors)
-    ///     .ThenInclude(a => a.Metadata);
-    /// </code>
-    public delegate IQueryable<TEntity> IncludeQuery<TEntity>(IQueryable<TEntity> query);
-
     /// <summary>
     /// Generic repository interface defining data access operations for entities.
     /// Provides a contract for CRUD operations and advanced querying capabilities.
@@ -43,7 +19,7 @@ namespace Lararium.Persistence.Core
         /// A task that represents the asynchronous operation. The task result contains
         /// the found entity or null if no entity with the specified id exists.
         /// </returns>
-        Task<TEntity?> GetAsync(TId id, CancellationToken cancellationToken = default);
+        Task<TEntity?> GetAsync(TId id, bool asTracking = true, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Retrieves a single entity using a custom filter expression with eager loading.
@@ -60,7 +36,8 @@ namespace Lararium.Persistence.Core
         /// </remarks>
         Task<TEntity?> GetAsync(
             Expression<Func<TEntity, bool>> filter,
-            IncludeQuery<TEntity> includeQuery,
+            IncludeQuery<TEntity>? includeQuery = default,
+            bool asTracking = true,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -168,6 +145,7 @@ namespace Lararium.Persistence.Core
         /// <remarks>
         /// This overload is efficient for read-only scenarios as it projects directly
         /// in the database query, reducing data transfer and memory usage.
+        /// If I understand the EF Core correctly. We don't need flag asNoTracking here because we have a Select expression.
         /// </remarks>
         Task<IEnumerable<TResult>> GetEntitiesAsync<TResult>(
             Expression<Func<TEntity, TResult>> select,
@@ -176,7 +154,6 @@ namespace Lararium.Persistence.Core
             IncludeQuery<TEntity>? includeQuery = null,
             int? skip = null,
             int? take = null,
-            bool asNoTracking = true,
             CancellationToken cancellationToken = default);
 
         /// <summary>

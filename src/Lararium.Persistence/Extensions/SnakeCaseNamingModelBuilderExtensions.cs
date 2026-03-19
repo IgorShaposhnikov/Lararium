@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 
-namespace Lararium.Persistence
+namespace Lararium.Persistence.Extensions
 {
     internal static partial class SnakeCaseNamingModelBuilderExtensions
     {

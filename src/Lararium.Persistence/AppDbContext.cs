@@ -1,5 +1,6 @@
 ﻿using Lararium.Core;
 using Lararium.Media.Module;
+using Lararium.Persistence.Extensions;
 using Lararium.Video.Models;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,5 +1,4 @@
-﻿using Lararium.Persistence.Core;
-using Lararium.Video;
+﻿using Lararium.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
@@ -9,9 +8,9 @@ namespace Lararium.Persistence.DataStores
     internal abstract class DataStoreBase<TEntity, TId> : IDataStore<TEntity, TId> where TEntity : class
     {
         protected readonly AppDbContext _dbContext;
-        protected readonly ILogger<VideoDataStore> _logger;
+        protected readonly ILogger<DataStoreBase<TEntity, TId>> _logger;
 
-        protected DataStoreBase(AppDbContext dbContext, ILogger<VideoDataStore> logger)
+        protected DataStoreBase(AppDbContext dbContext, ILogger<DataStoreBase<TEntity, TId>> logger)
         {
             _dbContext = dbContext;
             _logger = logger;
@@ -37,11 +36,14 @@ namespace Lararium.Persistence.DataStores
             return await _dbContext.Set<TEntity>().ToListAsync(cancellationToken);
         }
 
-        public abstract Task<TEntity?> GetAsync(TId id, CancellationToken cancellationToken = default);
+        public abstract Task<TEntity?> GetAsync(TId id, bool asNoTracking = true, CancellationToken cancellationToken = default);
 
-        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filter, IncludeQuery<TEntity> includeQuery, CancellationToken cancellationToken = default)
+        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filter, IncludeQuery<TEntity> includeQuery, bool asNoTracking = true, CancellationToken cancellationToken = default)
         {
             IQueryable<TEntity> query = _dbContext.Set<TEntity>();
+
+            if (asNoTracking)
+                query = query.AsNoTracking();
 
             if (includeQuery != null)
                 query = includeQuery(query);
@@ -57,11 +59,11 @@ namespace Lararium.Persistence.DataStores
             return await GetEntitiesInternalAsync(where, orderBy, includeQuery, skip, take, asNoTracking, cancellationToken).ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<TResult>> GetEntitiesAsync<TResult>(Expression<Func<TEntity, TResult>> select, Expression<Func<TEntity, bool>>? where = null, List<SortExpression<TEntity>>? orderBy = null, IncludeQuery<TEntity>? includeQuery = null, int? skip = null, int? take = null, bool asNoTracking = true, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<TResult>> GetEntitiesAsync<TResult>(Expression<Func<TEntity, TResult>> select, Expression<Func<TEntity, bool>>? where = null, List<SortExpression<TEntity>>? orderBy = null, IncludeQuery<TEntity>? includeQuery = null, int? skip = null, int? take = null, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(select);
 
-            var query = GetEntitiesInternalAsync(where, orderBy, includeQuery, skip, take, asNoTracking, cancellationToken);
+            var query = GetEntitiesInternalAsync(where, orderBy, includeQuery, skip, take, asNoTracking: false, cancellationToken);
             return await query.Select(select).ToListAsync(cancellationToken);
         }
 
