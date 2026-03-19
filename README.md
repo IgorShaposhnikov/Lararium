@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
 [![Svelte 5](https://img.shields.io/badge/Svelte-5-FF3E00?logo=svelte&logoColor=white)](https://svelte.dev/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Docker](https://img.shields.io/badge/Docker-WIP-FF8C00?logo=docker&logoColor=white)](https://www.docker.com/)
 
 **Lararium** is a unified, secure, and extensible home server (hub) designed for families or small groups of friends. 
 
@@ -11,7 +11,8 @@ At some point, I got tired of using a dozen disconnected services: Google Photos
 
 I wanted a system that I fully control, hosted on my own hardware, which stays completely functional and accessible no matter what happens to the global internet. The primary idea is to host Lararium on your local home network (LAN) and access it securely from anywhere via a personal VPN like WireGuard or Tailscale. However, nothing prevents you from deploying it on a standard cloud VPS if you prefer.
 
-*(The name refers to "lararia" — domestic shrines in Ancient Rome where the guardian spirits of the household were kept and honored).*
+> [!NOTE]
+> The name refers to "lararia" — domestic shrines in Ancient Rome where the guardian spirits of the household were kept and honored.
 
 ## ✨ Features (Modules)
 
@@ -56,6 +57,9 @@ I split the real-time protocols to keep the server footprint minimal:
 
 ## 🚀 Quick Start (Docker)
 
+> [!WARNING]
+> 🚧 **WIP Notice:** The Docker configuration is currently being put together and might be a bit unstable or require manual tweaking. Proceed with caution!
+
 The easiest way to spin up the project locally is via `docker-compose`.
 
 1. Clone the repository:
@@ -74,8 +78,8 @@ The easiest way to spin up the project locally is via `docker-compose`.
 4. Open `http://localhost:3000` in your browser.
 
 ## 🗺 Roadmap
-
-> ⚠️ **Note:** This project is currently in the early stages of development. I'm building it in my free time.
+> [!WARNING]
+> **Note:** This project is currently in the early stages of development. I'm building it in my free time.
 
 I've already laid down the core backend architecture, and right now I'm piecing together the Svelte frontend. Here is the current progress:
 
