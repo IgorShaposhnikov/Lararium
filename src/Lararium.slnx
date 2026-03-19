@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/docs/">
+    <File Path="../docs/BACKEND.md" />
+  </Folder>
   <Folder Name="/frontend/">
     <Project Path="Lararium.UI.Svelte/Lararium.UI.Svelte.esproj">
       <Build />
