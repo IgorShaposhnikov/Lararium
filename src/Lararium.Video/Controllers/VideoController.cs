@@ -219,8 +219,8 @@ namespace Lararium.Video.Controllers
 
             if (Path.GetExtension(filePath) == ".m3u8")
             {
-                Response.Headers.Add("Access-Control-Allow-Origin", "*");
-                Response.Headers.Add("Cache-Control", "no-cache");
+                Response.Headers["Access-Control-Allow-Origin"] = "*";
+                Response.Headers["Cache-Control"] = "no-cache";
 
                 var contentType = "application/vnd.apple.mpegurl";
 

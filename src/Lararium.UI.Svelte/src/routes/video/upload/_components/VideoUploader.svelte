@@ -14,6 +14,7 @@
         const selectedFile = e.target.files[0];
         if (selectedFile) {
             file = selectedFile;
+            console.log(file);
         }
     }
 
