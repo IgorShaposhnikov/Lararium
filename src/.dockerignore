@@ -1,0 +1,28 @@
+# Node
+node_modules/
+**/node_modules/
+
+# .NET build output
+**/[Bb]in/
+**/[Oo]bj/
+**/[Pp]ackages/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+*.env.local
+
+# Logs
+*.log

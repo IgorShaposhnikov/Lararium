@@ -1,6 +1,8 @@
 <Solution>
   <Folder Name="/build/">
     <File Path="../docker-compose.yaml" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
   </Folder>
   <Folder Name="/docs/">
     <File Path="../docs/BACKEND.md" />
@@ -19,4 +21,5 @@
     <Project Path="Lararium.Persistence/Lararium.Persistence.csproj" Id="89e929a5-a3af-49ae-a233-f02cd094e60c" />
     <Project Path="Lararium.Video/Lararium.Video.csproj" Id="f2787d6a-d15a-46dd-81ca-7bb410b1ef75" />
   </Folder>
+  <Project Path="Lararium/Lararium.csproj" Id="66a4860f-7991-4bbf-b409-57fb824f5be2" />
 </Solution>
