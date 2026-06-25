@@ -16,13 +16,8 @@ namespace Lararium.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
             builder.UseSnakeCaseNamingConvention();
-
-            builder.Entity<LarariumUser>().ToTable("users");
-            builder.Entity<VideoEntity>().ToTable("videos");
-            builder.Entity<MediaTag>().ToTable("media_tags");
-            builder.Entity<Actor>().ToTable("media_actors");
+            builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
     }
 }

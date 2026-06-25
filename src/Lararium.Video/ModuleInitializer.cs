@@ -1,21 +1,29 @@
-﻿using Lararium.Core.Modules;
+﻿using Lararium.Core.AspNetCore;
+using Lararium.Core.Modules;
 using Lararium.Video.Encoders;
 using Lararium.Video.Models.Options;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lararium.Video
 {
-    public sealed class ModuleInitializer : IModuleInitializer
+    public sealed class ModuleInitializer : IAspNetCoreModuleInitializer
     {
-        private readonly ModuleMetadata _metadata = new()
+        private readonly ModuleMetadata _metadata = new(
+            id: Guid.Parse("ad74efa7-8a65-4592-b03d-6b175114d7e7"),
+            name: "Lararium Video",
+            assembly: typeof(ModuleInitializer).Assembly,
+            version: "1.0.0",
+            priority: 10,
+            hasApiControllers: true
+        );
+
+        public ModuleMetadata GetMetadata()
         {
-            Id = Guid.Parse("ad74efa7-8a65-4592-b03d-6b175114d7e7"),
-            Name = "Lararium Video",
-            Assembly = typeof(ModuleInitializer).Assembly,
-            Version = "1.0.0",
-            HasApiControllers = true,
-        };
+            return _metadata;
+        }
 
         public IServiceCollection AddServices(IServiceCollection services, IConfiguration configuration)
         {
@@ -27,9 +35,14 @@ namespace Lararium.Video
             return services;
         }
 
-        public ModuleMetadata GetMetadata()
+        public void ConfigureEndpoints(IEndpointRouteBuilder endpoints)
         {
-            return _metadata;
+
+        }
+
+        public void ConfigureMiddleware(IApplicationBuilder app)
+        {
+
         }
     }
 }
