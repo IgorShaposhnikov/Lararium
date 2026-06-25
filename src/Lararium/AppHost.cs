@@ -1,7 +1,6 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var cache = builder.AddRedis("cache")
-    .WithHostPort("50406");
+var cache = builder.AddRedis("cache", port: 50406);
 
 var postgres = builder.AddPostgres("postgres")
     .WithHostPort(65123)
