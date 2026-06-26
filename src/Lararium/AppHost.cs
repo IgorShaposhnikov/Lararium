@@ -11,8 +11,7 @@ var server = builder.AddProject<Projects.Lararium_API>("server");
 
 var migrationService = builder.AddProject<Projects.Lararium_MigrationService>("migrationservice")
     .WithReference(postgres)
-    .WaitFor(postgres)
-    .WithParentRelationship(server);
+    .WaitFor(postgres);
 
 server.WithReference(postgres)
     .WaitFor(postgres)
