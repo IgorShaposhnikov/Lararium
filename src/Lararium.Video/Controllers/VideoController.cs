@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using FFMpegCore;
 using Lararium.Core.Persistence;
 using Lararium.Media.Module;
 using Lararium.Video.Encoders;
@@ -141,6 +142,9 @@ namespace Lararium.Video.Controllers
                 await request.FormFile.CopyToAsync(targetFile, cancellationToken);
             }
 
+            var analysis = await FFProbe.AnalyseAsync(finalFilePath, cancellationToken: cancellationToken);
+            mediaInfo.Duration = analysis.Duration;
+
             await _videoDataStore.AddAsync(mediaInfo, cancellationToken);
             await _videoDataStore.SaveChangesAsync(cancellationToken);
 
@@ -148,7 +152,7 @@ namespace Lararium.Video.Controllers
 
             await _hlsEncoder.Encode(finalFilePath, m3u8Output, cancellationToken: cancellationToken);
 
-            return Ok();
+            return Ok(mediaInfo.Id);
         }
 
         [HttpGet("list")]

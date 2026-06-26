@@ -11,5 +11,6 @@ namespace Lararium.Media.Models
         public long FileSize { get; init; }
         public string FileType { get; init; } = string.Empty;
         public string FileExt { get; init; } = string.Empty;
+        public DateTime CreationDate { get; init; }
     }
 }

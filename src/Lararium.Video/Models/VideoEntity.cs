@@ -61,5 +61,16 @@ namespace Lararium.Video.Models
         /// Actors are linked for search functionality, credits display, and content filtering.
         /// </remarks>
         public IReadOnlyCollection<Actor> Actors { get; set; } = [];
+        /// <summary>
+        /// Gets or sets the total playback duration of the video.
+        /// </summary>
+        /// <value>
+        /// A <see cref="TimeSpan"/> representing the length of the video content.
+        /// </value>
+        /// <remarks>
+        /// This property is typically populated during the media analysis phase using metadata 
+        /// extraction tools like FFmpeg or MediaFoundation.
+        /// </remarks>
+        public TimeSpan Duration { get; set; }
     }
 }
